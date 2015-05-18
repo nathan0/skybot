@@ -17,6 +17,7 @@ def db_init(db):
 @hook.event('PRIVMSG', ignorebots=False)
 def seeninput(paraml, input=None, db=None, bot=None):
     db_init(db)
+    time.sleep(0.7)
     db.execute("insert or replace into seen(name, time, quote, chan)"
                "values(?,?,?,?)", (input.nick.lower(), time.time(), input.msg,
                                    input.chan))
@@ -39,16 +40,16 @@ def seen(inp, nick='', chan='', db=None, input=None):
     db_init(db)
 
     last_seen = db.execute("select name, time, quote from seen where"
-                           " name = ? and chan = ?", (inp, chan)).fetchone()
+                           " name LIKE ? and chan = ?", (inp.replace("*","%"), chan)).fetchone()
 
     if last_seen:
         reltime = timesince.timesince(last_seen[1])
         if last_seen[2][0:1] == "\x01":
             return '%s was last seen %s ago: *%s %s*' % \
-                (inp, reltime, inp, last_seen[2][8:-1])
+                (last_seen[0], reltime, inp, last_seen[2][8:-1])
         else:
             return '%s was last seen %s ago saying: %s' % \
-                (inp, reltime, last_seen[2])
+                (last_seen[0], reltime, last_seen[2])
     else:
         return "I've never seen %s" % inp
 
