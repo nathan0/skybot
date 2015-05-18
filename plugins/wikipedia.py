@@ -12,10 +12,9 @@ random_url = api_prefix + "?action=query&format=xml&list=random&rnlimit=1&rnname
 paren_re = re.compile('\s*\(.*\)$')
 
 
-@hook.command('w')
 @hook.command(autohelp=False)
 def wiki(inp):
-    '''.w/.wiki <phrase> -- gets first sentence of wikipedia ''' \
+    '''.wiki <phrase> -- gets first sentence of wikipedia ''' \
         '''article on <phrase>'''
 
     if inp == "":
