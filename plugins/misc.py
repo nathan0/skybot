@@ -1,9 +1,9 @@
 import socket
 import subprocess, commands
-import time
+import time, math
 import os
 
-from util import hook, http
+from util import hook, http, timesince
 
 socket.setdefaulttimeout(10)  # global setting
 
@@ -122,5 +122,6 @@ def showuptime(inp):
     f = open("uptime","r")
     uptime = f.read()
     f.close()
+    uptime = _uptime
     uptime = timesince.timesince(float(uptime))
     return "I have been online for %s"%uptime
