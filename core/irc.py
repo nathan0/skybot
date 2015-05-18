@@ -87,7 +87,7 @@ class crlf_tcp(object):
     def send_loop(self):
         while True:
             line = self.oqueue.get().splitlines()[0][:500]
-            print ">>> %r" % line
+            #print ">>> %r" % line
             self.obuffer += line.encode('utf-8', 'replace') + '\r\n'
             while self.obuffer:
                 sent = self.socket.send(self.obuffer)
@@ -151,10 +151,11 @@ class IRC(object):
     def connect(self):
         self.conn = self.create_connection()
         thread.start_new_thread(self.conn.run, ())
+        if self.conf.get('sasl'): self.cmd("CAP LS")
         self.cmd("NICK", [self.nick])
         self.cmd("USER",
                  [self.conf.get('user', 'skybot'), "3", "*", self.conf.get('realname',
-                                                                 'Python bot - http://github.com/rmmh/skybot')])
+                                                                 'Python bot - http://github.com/nathan0/skybot')])
         if 'server_password' in self.conf:
             self.cmd("PASS", [self.conf['server_password']])
 
