@@ -174,7 +174,7 @@ def main(conn, out):
 
     if inp.command == 'PRIVMSG':
         # COMMANDS
-        bot_prefix = re.escape(bot.config.get("prefix", "."))
+        bot_prefix = re.escape(conn.conf.get("prefix", "."))
         if inp.chan == inp.nick:  # private message, no command prefix required
             prefix = r'^(?:(?:'+bot_prefix+')?|'
         else:
