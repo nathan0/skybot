@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import os
 import Queue
@@ -56,4 +56,7 @@ def main():
             time.sleep(.1)
 
 if __name__ == '__main__':
+    f = open("uptime","w")
+    f.write(str(time.time()))
+    f.close()
     main()
