@@ -50,10 +50,10 @@ def group_int_digits(number, delimiter=' ', grouping=3):
     return delimiter.join(builder)
 
 
-@hook.api_key('google')
-@hook.regex(*youtube_re)
-def youtube_url(match, api_key=None):
-    return get_video_description(match.group(1), api_key)
+#@hook.api_key('google')
+#@hook.regex(*youtube_re)
+#def youtube_url(match, api_key=None):
+#    return get_video_description(match.group(1), api_key)
 
 
 @hook.api_key('google')
