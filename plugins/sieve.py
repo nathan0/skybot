@@ -6,24 +6,24 @@ from util import hook
 @hook.sieve
 def sieve_suite(bot, input, func, kind, args):
     if input.command == 'PRIVMSG' and \
-       bot.config.get('ignorebots', True) and \
+       input.conn.conf.get('ignorebots', True) and \
        input.nick.lower()[-3:] == 'bot' and args.get('ignorebots', True):
             return None
 
     if kind == "command":
-        if input.trigger in bot.config.get('disabled_commands', []):
+        if input.trigger in input.conn.conf.get('disabled_commands', []):
             return None
 
-        ignored = bot.config.get('ignored', [])
+        ignored = input.conn.conf.get('ignored', [])
         if input.host in ignored or input.nick in ignored:
             return None
 
     fn = re.match(r'^plugins.(.+).py$', func._filename)
-    disabled = bot.config.get('disabled_plugins', [])
+    disabled = input.conn.conf.get('disabled_plugins', [])
     if fn and fn.group(1).lower() in disabled:
         return None
 
-    acls = bot.config.get('acls', {})
+    acls = input.conn.conf.get('acls', {})
     for acl in [acls.get(func.__name__), acls.get(input.chan), acls.get(input.conn.server)]:
         if acl is None:
             continue
@@ -46,7 +46,8 @@ def sieve_suite(bot, input, func, kind, args):
                 return None
 
     admins = input.conn.conf.get('admins', [])
-    input.admin = input.host in admins or input.nick in admins
+    user = "%s@%s"%(input.nick,input.host)
+    input.admin = user in admins
 
     if args.get('adminonly', False):
         if not input.admin:
