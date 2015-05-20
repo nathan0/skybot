@@ -6,6 +6,8 @@ import requests, re
 def weather(inp, db=None, input=None):
     "Usage: weather [location] -- gets weather information from http://openweathermap.org/"
     db.execute("CREATE TABLE IF NOT EXISTS weather(nick primary key, loc)")
+    db.execute("CREATE TABLE IF NOT EXISTS location(chan, nick, loc, lat, lon, primary key(chan, nick))")
+    db.commit()
     if not inp:
         loc = db.execute("SELECT loc FROM weather WHERE nick = ?", (input.nick.lower(),)).fetchone()
         if not loc:
@@ -18,6 +20,9 @@ def weather(inp, db=None, input=None):
     loc = loc.replace('hell','hull')
     try:
         data = requests.get('http://api.openweathermap.org/data/2.5/find', params={"q":loc,"units":"metric"},headers={"user-agent":"Mozilla/5.0 (X11; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0"}).json()["list"][0]
+        lat, lon = data["coord"]["lat"], data["coord"]["lon"]
+        db.execute("insert or replace into location(chan, nick, loc, lat, lon) values (?, ?, ?, ?, ?)", (input.chan, input.nick.lower(), inp, lat, lon))
+        db.commit()
         city = u"{}, {}".format(data["name"],data["sys"]["country"])
         temp_C = int(data["main"]["temp"])
         temp_F = CtoF(temp_C)
@@ -74,3 +79,4 @@ def MPHtoKMH(m):
 
 def DEGtoDIR(d):
     return ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"][int((d + 11.25) / 22.5)]
+
