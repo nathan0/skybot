@@ -1,4 +1,4 @@
-" seen.py: written by sklnd in about two beers July 2009"
+#" seen.py: written by sklnd in about two beers July 2009"
 
 import time
 import unittest
@@ -28,7 +28,7 @@ def seeninput(paraml, input=None, db=None, bot=None):
 def seen(inp, nick='', chan='', db=None, input=None):
     ".seen <nick> -- Tell when a nickname was last in active in irc"
 
-    inp = inp.lower()
+    inp = inp.lower().split()[0]
 
     if input.conn.nick.lower() == inp:
         # user is looking for us, being a smartass
