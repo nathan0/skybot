@@ -19,7 +19,7 @@ def weather(inp, db=None, input=None):
         db.commit()
     loc = loc.replace('hell','hull')
     try:
-        data = requests.get('http://api.openweathermap.org/data/2.5/find', params={"q":loc,"units":"metric"},headers={"user-agent":"Mozilla/5.0 (X11; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0"}).json()["list"][0]
+        data = requests.get('http://api.openweathermap.org/data/2.5/weather', params={"q":loc,"units":"metric"},headers={"user-agent":"Mozilla/5.0 (X11; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0"}).json()
         lat, lon = data["coord"]["lat"], data["coord"]["lon"]
         db.execute("insert or replace into location(chan, nick, loc, lat, lon) values (?, ?, ?, ?, ?)", (input.chan, input.nick.lower(), inp, lat, lon))
         db.commit()
@@ -32,8 +32,9 @@ def weather(inp, db=None, input=None):
         wind_direction = DEGtoDIR(int(data["wind"]["deg"]))
         clouds_description = data["weather"][0]["main"]
         return u"{}: Currently {}C ({}F), humidity: {}%, wind: {} at {}mph ({}km/h), conditions: {}.".format(
-            city,temp_C,temp_F,humidity,wind_direction,wind_speed_mph,wind_speed_kmh,clouds_description)
-    except:
+           city,temp_C,temp_F,humidity,wind_direction,wind_speed_mph,wind_speed_kmh,clouds_description)
+    except BaseException, e:
+        print e
         return "Location not found"
 
 @hook.command(autohelp=False)
@@ -78,5 +79,5 @@ def MPHtoKMH(m):
     return int(m * 1.60934)
 
 def DEGtoDIR(d):
-    return ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"][int((d + 11.25) / 22.5)]
+    return ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW","N"][int((d + 11.25) / 22.5)]
 
