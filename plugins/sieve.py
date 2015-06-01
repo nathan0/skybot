@@ -1,7 +1,6 @@
-import re
+import re, fnmatch
 
 from util import hook
-
 
 @hook.sieve
 def sieve_suite(bot, input, func, kind, args):
@@ -47,7 +46,8 @@ def sieve_suite(bot, input, func, kind, args):
 
     admins = input.conn.conf.get('admins', [])
     user = "%s@%s"%(input.nick,input.host)
-    input.admin = user in admins
+    input.admin = any(fnmatch.fnmatch(user, i) for i in admins) or any(user.endswith("@" + i) for i in admins)
+    #input.admin = user in admins
 
     if args.get('adminonly', False):
         if not input.admin:

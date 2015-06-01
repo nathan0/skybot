@@ -9,6 +9,7 @@ api_url = "http://ws.audioscrobbler.com/2.0/?format=json"
 
 
 @hook.api_key('lastfm')
+@hook.command("np", autohelp=False)
 @hook.command(autohelp=False)
 def lastfm(inp, chan='', nick='', reply=None, api_key=None, db=None):
     ".lastfm <username> [dontsave] | @<nick> -- gets current or last played " \

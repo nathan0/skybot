@@ -21,7 +21,7 @@ def get_video_description(vid_id, api_key):
 
     j = j['items'][0]
 
-    duration = j['contentDetails']['duration'].replace('PT', '').lower()
+    duration = j['contentDetails']['duration'].replace('PT', '').replace('P', '').replace('T', ' ').lower()
 
     published = time.strptime(j['snippet']['publishedAt'],
                               "%Y-%m-%dT%H:%M:%S.000Z")
@@ -30,9 +30,9 @@ def get_video_description(vid_id, api_key):
     views = group_int_digits(j['statistics']['viewCount'], ',')
 
     out = (u'\x02{snippet[title]}\x02 - length \x02{duration}\x02 - '
-           u'{statistics[likeCount]}\u2191{statistics[dislikeCount]}\u2193 - '
-           u'\x02{views}\x02 views - '
-           u'\x02{snippet[channelTitle]}\x02 on \x02{published}\x02'
+           #u'{statistics[likeCount]}\u2191{statistics[dislikeCount]}\u2193 - '
+           u'\x02{views}\x02 views'
+           #u'\x02{snippet[channelTitle]}\x02 on \x02{published}\x02'
           ).format(duration=duration, views=views, published=published, **j)
 
     # TODO: figure out how to detect NSFW videos

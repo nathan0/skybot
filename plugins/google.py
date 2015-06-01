@@ -10,20 +10,21 @@ def api_get(query, key, is_image=None, num=1):
 
 
 @hook.api_key('google')
+@hook.command('img')
 @hook.command
-def gis(inp, api_key=None):
+def gis(inp, api_key=None, say=None):
     '''.gis <term> -- finds an image using google images (safesearch off)'''
 
     parsed = api_get(inp, api_key, is_image=True, num=10)
     if 'items' not in parsed:
         return 'no images found'
-    return random.choice(parsed['items'])['link']
+    say(random.choice(parsed['items'])['link'])
 
 
 @hook.api_key('google')
 @hook.command('g')
 @hook.command
-def google(inp, api_key=None):
+def google(inp, api_key=None, say=None):
     '''.g/.google <query> -- returns first google search result'''
 
     parsed = api_get(inp, api_key)
@@ -36,4 +37,4 @@ def google(inp, api_key=None):
     if len(out) > 300:
         out = out[:out.rfind(' ')] + '..."'
 
-    return out
+    say(out)

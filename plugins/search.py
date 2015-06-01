@@ -57,6 +57,8 @@ def expand(inp, say=None):
 def zeroclick(inp, say=None, input=None):
     "zeroclick/0click <search> -- gets zero-click info from DuckDuckGo"
     if inp.group(2) != "":
+        if inp.group(2).lower() == "what is love":
+            return "http://youtu.be/xhrBDcQq2DM"
         url = "http://duckduckgo.com/lite?"
         params = {"q":inp.group(2).replace("\001","").encode('utf8', 'ignore')}
         url = "http://duckduckgo.com/lite/?"+urllib.urlencode(params)
@@ -123,7 +125,7 @@ def dimg(inp, say=None):
         data = requests.get(url).json()
     except:
         return "Could not find image"
-    return data["results"][0]["j"]
+    return data["results"][0]["image"]
 
 @hook.command
 def qrcode(inp, input=None):
